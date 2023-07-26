@@ -394,52 +394,46 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     Mapa_ISOCRONAS.save('./ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Llegada_en_Tiempos_{}_minutos.html'.format(Nombre_Lugar, Tiempos))
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def main():
     st.title('Aplicación de Análisis de Centralidad de un Grafo')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     # Entrada de parámetros
-    lugar = st.text_input('Introduce el lugar del que cargar el grafo (ej. "Madrid, España").')
-    tiempos_viaje = st.multiselect('Selecciona los tiempos de viaje para crear las isócronas:', [5,10,15])
-    tipo_calles = st.selectbox('Selecciona el tipo de calles:', ['drive', 'bike', 'walk'], default='drive')
-    distancia = st.slider('Selecciona la distancia alrededor del punto de las coordenadas:', 1000, 10000, 3500)
-    tiempo_espera = st.slider('Selecciona el tiempo de espera para cargar el grafo:', 60, 600, 180)
-    velocidad = st.slider('Selecciona la velocidad para calcular los tiempos de andado:', 1, 10, 5)
-    tamaño_nodo = st.slider('Selecciona el tamaño de los nodos en el grafo:', 10, 100, 40)
-    tamaño_figura = st.selectbox('Selecciona el tamaño de la figura:', [(10, 10), (16, 16), (20, 20)])
-    guardar_img = st.checkbox('¿Guardar imagen del grafo?')
-    guardar_grafo = st.checkbox('¿Guardar grafo en archivo GraphML?')
+    lugar = st.text_input('Introduce el lugar del que cargar el grafo (ej. "Ávila, Castilla y León, España"):')
+    tiempos_viaje = st.multiselect('Selecciona los tiempos de viaje para crear las isócronas:',
+                                   [5, 10, 15, 30, 60, 90, 120], default=[5, 15])
+    velocidad = st.number_input('Selecciona la velocidad para calcular los tiempos de andado:',
+                                min_value=1, max_value=100, value=5, step=1)
+    distancia = st.slider('Selecciona la distancia alrededor del punto de las coordenadas:',
+                          min_value=1000, max_value=8000, value=3500, step=100)
+    tiempo_espera = st.slider('Selecciona el tiempo de espera para cargar el grafo:',
+                              min_value=0, max_value=300, value=180, step=10)
+    tipo_calles = st.selectbox('Selecciona el tipo de calles:',
+                               ['drive', 'walk', 'all'], index=0)
+    tamaño_nodo = st.slider('Selecciona el tamaño de los nodos en el grafo:',
+                            min_value=10, max_value=100, value=40, step=5)
+    tamaño_figura = st.selectbox('Selecciona el tamaño de la figura:',
+                                 [(10, 10), (16, 16), (20, 20)], index=1)
+    guardar_img = st.radio('¿Guardar imagen del grafo?', [True, False], index=0)
+    guardar_grafo = st.radio('¿Guardar grafo en archivo GraphML?', [True, False], index=0)
 
     if st.button('Crear el Grafo'):
         Dibujar_Nodo_Central(lugar, tiempos_viaje, velocidad, distancia, tiempo_espera, tipo_calles,
                              tamaño_nodo, tamaño_figura, guardar_img, guardar_grafo)
-
-
-
-
-
-
-
-
-
-
-
 
 if __name__ == "__main__":
     main()
