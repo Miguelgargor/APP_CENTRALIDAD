@@ -427,14 +427,14 @@ def main():
     st.image('https://raw.githubusercontent.com/Miguelgargor/apliacaion/main/imagen_mapa.png', use_column_width=True) # IMAGEN.
 
 ## DESCRIPCIÓN APP:
-    st.write('Con esta aplicación, podrá seleccionar cualquier ciudad, pueblo o distrito en el Mundo y, al elegir los parámetros deseados, obtendrá:',
+    st.write('Con esta aplicación, podrás seleccionar cualquier ciudad, pueblo o distrito en el Mundo y, al elegir los parámetros deseados, obtendrás:',
              '\n- El grafo descargado en caso de necesitarlo a posteriori.',
-             '\n- Un mapa marcado con el punto geográfico desde el que se puede acceder a cualquier otro lugar de la zona de manera más sencilla, reduciendo el tiempo y la distancia requeridos para llegar al destino, así como su ampliación.',
+             '\n- Un mapa marcado con el punto geográfico desde el que se puede acceder a cualquier otro lugar de la zona de la manera más sencilla, reduciendo el tiempo y la distancia requeridos para llegar al destino, así como su ampliación.',
              '\n- Otro mapa con todos los puntos geográficos marcados según su grado de importancia en el estudio.',
              '\n- Y otro indicando los lugares alcanzables desde el punto marcado en diferentes tiempos y a una velocidad especifica.',
-             '\n\n\nAdemás, se descargarán todos estos mapas en una carpeta en su escritorio, que incluirá su versión interactiva.')
+             '\n\n\nAdemás, se descargarán todos estos mapas en una carpeta en tu escritorio, que incluirá su versión interactiva.')
 
-    st.header('Elija sus propios parámetros:') # SUBTÍTULO.
+    st.header('Elige tus propios parámetros:') # SUBTÍTULO.
 
 ## Entrada de parámetros:
     # a) Lugar:
@@ -471,7 +471,7 @@ def main():
         
     ## Mensaje tras haber obtenido los resultados: (Indicando TAMAÑO, COLOR (limegreen), NEGRITA...):
         mensaje.write('<p style="font-size: 18px; color: limegreen; font-weight: bold;">¡Resultados obtenidos!</p>'
-                    '<p style="font-size: 15px; color: limegreen;">(Puede ver los <strong>MAPAS INTERACTIVOS</strong> en la carpeta creada en su escritorio)</p>',
+                    '<p style="font-size: 15px; color: limegreen;">(Puede ver los <strong>MAPAS INTERACTIVOS</strong> en la carpeta creada en tu escritorio)</p>',
                     unsafe_allow_html=True)
 if __name__ == "__main__":
     main()
