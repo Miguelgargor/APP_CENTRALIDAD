@@ -424,7 +424,7 @@ st.markdown("""<style>/* Cambiar el color del encabezado a azul */.element-conta
 
 def main():
     st.title('ANÁLISIS DE CENTRALIDAD Y DISTANCIA') # TÍTULO.
-    st.image('https://raw.githubusercontent.com/Miguelgargor/apliacaion/main/imagen_mapa.png', use_column_width=True) # IMAGEN.
+    st.image('https://raw.githubusercontent.com/Miguelgargor/APP_CENTRALIDAD/main/imagen_mapa.png?token=GHSAT0AAAAAACFRVEI6Y6DEVGI2GXFHDCOWZGDU44A', use_column_width=True) # IMAGEN.
 
 ## DESCRIPCIÓN APP:
     st.write('Con esta aplicación, podrás seleccionar cualquier ciudad, pueblo o distrito en el Mundo y, al elegir los parámetros deseados, obtendrás:',
