@@ -506,7 +506,7 @@ def main():
         # Explicación Parámetro:
         st.write('Opción para guardar el grafo creado. Por defecto se guardará.')
         # Ingresar el Parámetro:
-        guardar_grafo = True if st.radio('', ['SI', 'NO'], index=0) =='SI' else False
+        guardar_grafo = True if st.radio(' ', ['SI', 'NO'], index=0) =='SI' else False
 
 ### Crear el Botón para ejecutar el Código:
     if st.button('**GENERAR RESULTADOS**'):
