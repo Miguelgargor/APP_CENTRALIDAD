@@ -12,7 +12,7 @@ import streamlit as st             # Creación de la APP WEB.
 ##=========================================================================================================================================##
 
 ## TÍTULO de la PESTAÑA del NAVEGADOR y añadir ICONO: (TÍTULO, URL ICONO (Subido a GitHub))
-URL_ICONO= 'https://raw.githubusercontent.com/Miguelgargor/APP_CENTRALIDAD/main/imagen_mapa.png?token=GHSAT0AAAAAACFRVEI7P26CIWDMCW7MXADAZGDTQUQ'
+URL_ICONO= 'https://raw.githubusercontent.com/Miguelgargor/APP_CENTRALIDAD/main/Imagen1.png?token=GHSAT0AAAAAACFRVEI7NQSLDLUGIFRABFNSZGDUEDA'
 st.set_page_config(page_title="ANÁLISIS CENTRALIDAD", page_icon=URL_ICONO, layout="centered", initial_sidebar_state="auto")
 ##===========================================================================================================================================##
 ##===========================================================================================================================================##
