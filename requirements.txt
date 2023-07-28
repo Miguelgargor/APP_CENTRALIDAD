@@ -7,4 +7,3 @@ geopy
 geopandas
 streamlit
 shapely
-threading
