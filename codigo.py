@@ -9,6 +9,9 @@ import threading                   # Para poner el LÍMITE de TIEMPO para cargar
 import geopy                       # Para obtener las COORDENADAS del LUGAR.
 import geopandas as gpd            # Mapa interactivo.
 import streamlit as st             # Creación de la APP WEB.
+import folium                      # Otras librerías necesarias en la APP WEB.
+import matplotlib
+import mapclassify
 ##=========================================================================================================================================##
 
 ## TÍTULO de la PESTAÑA del NAVEGADOR y añadir ICONO: (TÍTULO, URL ICONO (Subido a GitHub))
