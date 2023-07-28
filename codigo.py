@@ -438,26 +438,75 @@ def main():
 
 ## Entrada de parámetros:
     # a) Lugar:
-    lugar = st.text_input('**1- Lugar a estudiar**', value= 'Ávila, Castilla y León, España')
+    with st.expander('**1- Lugar a estudiar**'):
+        # Explicación Parámetro:
+        st.write('Ingresar la ciudad, pueblo, distrito o zona geográfica que se desee estudiar.')
+        # Ingresar el Parámetro:
+        lugar = st.text_input('Ejemplo:', value='Ávila, Castilla y León, España')
+
     # b) Tiempos de viaje: (Por defecto: [5,10,15]):
-    tiempos_viaje = st.multiselect('**2- Tiempos de Viaje** (¿dónde llega desde el punto principal?)', list(range(121)), default=[5, 10, 15])
-    tiempos_viaje = sorted(tiempos_viaje) # Ordenar los Tiempos de Viaje (ascendente).
+    with st.expander('**2- Tiempos de Viaje** (¿dónde se llega desde el punto principal?)'):
+        # Explicación Parámetro:
+        st.write('Ingresar los tiempos que pondrán límite al desplazamiento por las calles del mapa. Es decir, si los tiempos son 5, 10, 15; se mostrarán los lugares a los que se llegaría en 5, 10 y 15 minutos respectivamente.')
+        # Ingresar el Parámetro:
+        tiempos_viaje = st.multiselect('Ejemplo:', list(range(121)), default=[5, 10, 15])
+        tiempos_viaje = sorted(tiempos_viaje) # Ordenar los Tiempos de Viaje (ascendente).
+
     # c) Velocidad andando: (Por defecto: 6 Km/h):
-    velocidad = st.number_input('**3- Velocidad de Viaje** (en Km/h)',min_value=1.0, max_value=100.0, value=6.0, step=0.1)
+    with st.expander('**3- Velocidad de Viaje** (en Km/h)'):
+        # Explicación Parámetro:
+        st.write('Velocidad a la que se desplazará por el mapa.')
+        # Ingresar el Parámetro:
+        velocidad = st.number_input('Ejemplo:',min_value=1.0, max_value=100.0, value=6.0, step=0.1)
+
     # d) Distancia del cuadro del Grafo (compacto):
-    distancia = st.slider('**4- Distancia máxima del lugar desde su punto medio** (en metros)', min_value=1000, max_value=8000, value=3500, step=100)
+    with st.expander('**4- Distancia máxima del lugar desde su punto medio** (en metros)'):
+        # Explicación Parámetro:
+        st.write('Indica la distancia máxima que se tendrá en cuenta para crear el grafo desde el punto medio de la zona indicada.')
+        # Ingresar el Parámetro:
+        distancia = st.slider('Ejemplo:', min_value=1000, max_value=8000, value=3500, step=100)
+
     # e) Tiempo máximo de espera al cargar el Grafo:
-    tiempo_espera = st.slider('**5- Tiempo máximo de espera** (en segundos)', min_value=0, max_value=300, value=180, step=10)
+    with st.expander('**5- Tiempo máximo de espera** (en segundos)'):
+        # Explicación Parámetro:
+        st.write('Indica el máximo de tiempo que se esperará para cargar el grafo entero. En caso de exceder el tiempo indicado, se cargará un grafo de la zona más pequeño.')
+        # Ingresar el Parámetro:
+        tiempo_espera = st.slider('Ejemplo:', min_value=0, max_value=300, value=180, step=10)
+    
     # f) Tipo de calles:
-    tipo_calles = st.selectbox('**6- Tipo de calles**', ['drive', 'walk', 'bike', 'all', 'all_private'], index=0)
-    # g) Tamaño del Nodo principal:    
-    tamaño_nodo = st.slider('**7- Tamaño de los nodos en el grafo**', min_value=10, max_value=100, value=40, step=1)
+    with st.expander('**6- Tipo de calles**'):
+        # Explicación Parámetro:
+        st.write('Referente al tipo de vía de circulación. drive: Vía de circulación vial. walk: Vía a pie, bike: Vías y caminos donde pueden circular las bicicletas, all: Todas las vías menos las privadas, all_private: Todas las vías, incluidas las privadas.')
+        # Ingresar el Parámetro:
+        tipo_calles = st.selectbox('Ejemplo (Recomendado):', ['drive', 'walk', 'bike', 'all', 'all_private'], index=0)
+    
+    # g) Tamaño del Nodo principal: 
+    with st.expander('**7- Tamaño de los nodos en el grafo**'):
+        # Explicación Parámetro:
+        st.write('Tamaño de los puntos dibujados sobre el mapa.')
+        # Ingresar el Parámetro:
+        tamaño_nodo = st.slider('Ejemplo:', min_value=10, max_value=100, value=40, step=1)
+  
     # h) Tamaño de la figura:
-    tamaño_figura = st.selectbox('**8- Tamaño de la figura**', [(i, i) for i in range(1, 17)], index=9)
+    with st.expander('**8- Tamaño de la figura**'):
+        # Explicación Parámetro:
+        st.write('Dimensiones de los mapas generados.')
+        # Ingresar el Parámetro:
+        tamaño_figura = st.selectbox('Ejemplo:', [(i, i) for i in range(1, 17)], index=9)
+  
     # i) Guardar los Ploteos:
-    guardar_img = True if st.radio('**9- ¿Guardar mapas?**', ['SI', 'NO'], index=0) == 'SI' else False
+    with st.expander('**9- ¿Guardar mapas?**'):
+        # Explicación Parámetro:
+        st.write('Opción para guardar los mapas creados. Por defecto se guardarán.')
+        # Ingresar el Parámetro:
+        guardar_img = True if st.radio('', ['SI', 'NO'], index=0) == 'SI' else False
+  
     # j) Guardar el Grafo:
-    guardar_grafo = True if st.radio('**10- ¿Guardar Grafo?**', ['SI', 'NO'], index=0) =='SI' else False
+    with st.expander('**10- ¿Guardar Grafo?**'):
+        # Explicación Parámetro:
+        st.write('Opción para guardar el grafo creado. Por defecto se guardará.')
+        # Ingresar el Parámetro:
+        guardar_grafo = True if st.radio('', ['SI', 'NO'], index=0) =='SI' else False
 
 ### Crear el Botón para ejecutar el Código:
     if st.button('**GENERAR RESULTADOS**'):
