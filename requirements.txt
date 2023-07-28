@@ -2,7 +2,6 @@ pandas
 matplotlib
 osmnx
 networkx
-from adjustText import adjust_text # Para ajustar las etiquetas de las aristas (Texto).
 adjustText
 geopy
 geopandas
