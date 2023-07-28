@@ -476,7 +476,7 @@ def main():
     # f) Tipo de calles:
     with st.expander('**6- Tipo de calles**'):
         # Explicación Parámetro:
-        st.write('Referente al tipo de vía de circulación. drive: Vía de circulación vial. walk: Vía a pie, bike: Vías y caminos donde pueden circular las bicicletas, all: Todas las vías menos las privadas, all_private: Todas las vías, incluidas las privadas.')
+        st.write('Referente al tipo de vía de circulación. **drive**: Vía de circulación vial. **walk**: Vía a pie, **bike**: Vías y caminos donde pueden circular las bicicletas, **all**: Todas las vías menos las privadas, **all_private**: Todas las vías, incluidas las privadas.')
         # Ingresar el Parámetro:
         tipo_calles = st.selectbox('Ejemplo (Recomendado):', ['drive', 'walk', 'bike', 'all', 'all_private'], index=0)
     
