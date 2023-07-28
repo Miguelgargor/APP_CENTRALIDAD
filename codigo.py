@@ -22,7 +22,7 @@ st.set_page_config(page_title="ANÁLISIS CENTRALIDAD", page_icon=URL_ICONO, layo
 
 #### FUNCIÓN PARA DIBUJAR EL GRAFO CON EL NODO DE MAYOR CENTRALIDAD ####
 def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo_Espera=180, Tipo_Calles='drive',
-                         Tamaño_nodo=40, Tamaño_figura=(16,16), Guardar_img=True, Guardar_Grafo=True):
+                         Tamaño_nodo=40, Tamaño_figura=(16,16), Guardar_Archivos=True):
 ### B) CREACIÓN Y GUARDADO DEL GRAFO:
 ## 1º) Creación del Grafo:
     # 0) Si se pasa del tiempo saltará una Excepción:
@@ -96,16 +96,14 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 ##------------------------------------------------------------------------------------------------------------------##
 ## 2º) Comprobar si la carpeta no existe antes de crearla:
     Nombre_Lugar= Lugar.split(',')[0].strip().replace(' ', '_') + '_' + Tipo_Calles # Nombre del Lugar extraído del parámetro 'Lugar'.
-    
-    if not os.path.exists('./'): # Si no existe ya la carpeta...GENERAL.
-        os.makedirs('./ANALISIS CENTRALIDAD') # Creala con el Nombre del Lugar a analizar.
-
-    if not os.path.exists('./'): # Si no existe ya la carpeta...ESPECÍFICA.
-        os.makedirs('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}'.format(Nombre_Lugar)) # Creala con el Nombre del Lugar a analizar.
+    if Guardar_Archivos==True:
+      if not os.path.exists('./'): # Si no existe ya la carpeta...GENERAL.
+          os.makedirs('./ANALISIS CENTRALIDAD') # Creala con el Nombre del Lugar a analizar.
+      if not os.path.exists('./'): # Si no existe ya la carpeta...ESPECÍFICA.
+          os.makedirs('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}'.format(Nombre_Lugar)) # Creala con el Nombre del Lugar a analizar.
 ##------------------------------------------------------------------------------------------------------------------##
 ## 3º) Guardar Grafo:
-    if Guardar_Grafo==True:
-        ox.save_graphml(G, './ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}.graphml'.format(Nombre_Lugar, Nombre_Lugar))
+      ox.save_graphml(G, './ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}.graphml'.format(Nombre_Lugar, Nombre_Lugar))
 ##=========================================================================================================================================##
 ##=========================================================================================================================================##
 
@@ -184,7 +182,7 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     st.pyplot(fig)  # Mostrar el ploteo en la APP WEB.
 
 ## GUARDAR IMAGEN:
-    if Guardar_img==True:
+    if Guardar_Archivos==True:
             plt.savefig('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}_Nodo_Mayor_Centralidad.png'.format(Nombre_Lugar, Nombre_Lugar))
 ##------------------------------------------------------------------------------------------------------------------##
 ## 12º) Crear MAPA INTERACTIVO con el NODO CENTRAL RESALTADO EN ROJO:
@@ -205,11 +203,12 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     mapa_nodos = geomapa_nodos.explore(color='color', legend=True, style_kwds={'color':'black','weight':0.3}, tiles='CartoDB positron', popup=['Nº Node'], tooltip=None)
 
     # f) Verificar si la carpeta 'MAPAS_INTERACTIVOS' ya existe dentro de 'ANALISIS_CENTRALIDAD':
-    if not os.path.exists('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS'.format(Nombre_Lugar)):
-        os.makedirs('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS'.format(Nombre_Lugar))  # Si no existe-> crearla.
+    if Guardar_Archivos==True:
+      if not os.path.exists('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS'.format(Nombre_Lugar)):
+          os.makedirs('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS'.format(Nombre_Lugar))  # Si no existe-> crearla.
 
     # g) Guardar el Mapa Interactivo como archivo HTML (Google):
-    mapa_nodos.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Nodo_Mayor_Centralidad.html'.format(Nombre_Lugar))
+          mapa_nodos.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Nodo_Mayor_Centralidad.html'.format(Nombre_Lugar))
 ##=========================================================================================================================================##
 ##=========================================================================================================================================##
 
@@ -246,7 +245,7 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     st.pyplot(fig)  # Mostrar el ploteo en la APP WEB.
 
 ## GUARDAR IMAGEN:
-    if Guardar_img==True:
+    if Guardar_Archivos==True:
             plt.savefig('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}_Nodo_Mayor_Centralidad_ZOOM.png'.format(Nombre_Lugar, Nombre_Lugar))
 ##=========================================================================================================================================##
 ##=========================================================================================================================================##
@@ -266,7 +265,7 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     st.pyplot(fig)  # Mostrar el ploteo en la APP WEB.
 
 ## GUARDAR IMAGEN:
-    if Guardar_img==True:
+    if Guardar_Archivos==True:
             plt.savefig('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}_Nodos_según_Centralidad_MEDIA.png'.format(Nombre_Lugar, Nombre_Lugar))
 ##------------------------------------------------------------------------------------------------------------------##
 ## 18º) Crear MAPA INTERACTIVO con los NODOS según su Grado de CENTRALIDAD MEDIA:     (Mapa_Color,     Leyenda,     Estilo_Bordes_Nodos,                       Estilo_Mapa,
@@ -274,7 +273,8 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
                                                      popup=['Nº Node', 'Media_Centralidad'], tooltip=None) # Información Nodos Mostrar, NO Mostrar resto de Info).
     
     # Guardar el Mapa Interactivo como archivo HTML (Google):
-    mapa_nodos_segun_centralidad.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Nodos_según_Centralidad_MEDIA.html'.format(Nombre_Lugar))
+    if Guardar_Archivos==True:
+        mapa_nodos_segun_centralidad.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Nodos_según_Centralidad_MEDIA.html'.format(Nombre_Lugar))
 ##=========================================================================================================================================##
 ##=========================================================================================================================================##
 
@@ -374,7 +374,7 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 
 ## GUARDAR IMAGEN:
     Tiempos= "_".join(map(str, Tiempos_Viaje))                                                # String con los Tiempos de Viaje: a_b_c...
-    if Guardar_img==True:
+    if Guardar_Archivos==True:
             plt.savefig('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}_Llegada_en_Tiempos_{}_minutos.png'.format(Nombre_Lugar, Nombre_Lugar, Tiempos))
 ##------------------------------------------------------------------------------------------------------------------##
 ## 26º) MAPA INTERACTIVO ISOCRONAS (Llegada en un determinado TIEMPO):
@@ -408,7 +408,8 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     Mapa_ISOCRONAS= geomapa_nodos.explore(color='Colores_Isocronas', legend=True, style_kwds={'color':None}, tiles='CartoDB positron', popup=['Nº Node', 'Tiempo de Llegada (min)'], tooltip=None)
 
     # f) Guardar el Mapa Interactivo como archivo HTML (Google):
-    Mapa_ISOCRONAS.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Llegada_en_Tiempos_{}_minutos.html'.format(Nombre_Lugar, Tiempos))
+    if Guardar_Archivos==True:
+        Mapa_ISOCRONAS.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Llegada_en_Tiempos_{}_minutos.html'.format(Nombre_Lugar, Tiempos))
 ##===========================================================================================================================================##
 ##===========================================================================================================================================##
 
@@ -497,19 +498,12 @@ def main():
         # Ingresar el Parámetro:
         tamaño_figura = st.selectbox('Ejemplo:', [(i, i) for i in range(1, 17)], index=9)
   
-    # i) Guardar los Ploteos:
-    with st.expander('**9- ¿Guardar mapas?**'):
+    # i) Guardar los Ploteos y el Grafo:
+    with st.expander('**9- ¿Guardar los mapas y el grafo?**'):
         # Explicación Parámetro:
-        st.write('Opción para guardar los mapas creados. Por defecto se guardarán.')
+        st.write('Opción para guardar los mapas y el grafo creados. Por defecto se guardarán.')
         # Ingresar el Parámetro:
-        guardar_img = True if st.radio('', ['SI', 'NO'], index=0) == 'SI' else False
-  
-    # j) Guardar el Grafo:
-    with st.expander('**10- ¿Guardar Grafo?**'):
-        # Explicación Parámetro:
-        st.write('Opción para guardar el grafo creado. Por defecto se guardará.')
-        # Ingresar el Parámetro:
-        guardar_grafo = True if st.radio(' ', ['SI', 'NO'], index=0) =='SI' else False
+        Guardar_Archivos = True if st.radio('', ['SI', 'NO'], index=0) == 'SI' else False
 
 ### Crear el Botón para ejecutar el Código:
     if st.button('**GENERAR RESULTADOS**'):
@@ -519,11 +513,11 @@ def main():
                         unsafe_allow_html=True)
 #### CARGADO DE LA FUNCIÓN EN SÍ:
         Dibujar_Nodo_Central(lugar, tiempos_viaje, velocidad, distancia, tiempo_espera, tipo_calles,
-                             tamaño_nodo, tamaño_figura, guardar_img, guardar_grafo)
+                             tamaño_nodo, tamaño_figura, Guardar_Archivos)
         
     ## Mensaje tras haber obtenido los resultados: (Indicando TAMAÑO, COLOR (limegreen), NEGRITA...):
         mensaje.write('<p style="font-size: 18px; color: limegreen; font-weight: bold;">¡Resultados obtenidos!</p>'
-                    '<p style="font-size: 15px; color: limegreen;">(Puede ver los <strong>MAPAS INTERACTIVOS</strong> en la carpeta creada en tu escritorio)</p>',
+                    '<p style="font-size: 15px; color: limegreen;">(En caso de haber activado la opción de guardar los resultados, puedes ver los <strong>MAPAS INTERACTIVOS</strong> en la carpeta creada en tu escritorio)</p>',
                     unsafe_allow_html=True)
 if __name__ == "__main__":
     main()
