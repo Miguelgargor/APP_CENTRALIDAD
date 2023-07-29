@@ -15,7 +15,7 @@ import mapclassify
 ##=========================================================================================================================================##
 
 ## TÍTULO de la PESTAÑA del NAVEGADOR y añadir ICONO: (TÍTULO, URL ICONO (Subido a GitHub))
-URL_ICONO= 'https://raw.githubusercontent.com/Miguelgargor/APP_CENTRALIDAD/main/Imagen1.png?token=GHSAT0AAAAAACFRVEI7WZWDGN5TAR7VB4KQZGE3ZPQ'
+URL_ICONO= 'https://raw.githubusercontent.com/Miguelgargor/APP_CENTRALIDAD/main/Imagen1.png?token=GHSAT0AAAAAACFRVEI6SZGLQN42OSO72OEEZGE4AIQ'
 st.set_page_config(page_title="ANÁLISIS CENTRALIDAD", page_icon=URL_ICONO, layout="centered", initial_sidebar_state="auto")
 ##===========================================================================================================================================##
 ##===========================================================================================================================================##
