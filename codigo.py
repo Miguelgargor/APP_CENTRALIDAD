@@ -15,7 +15,7 @@ import mapclassify
 ##=========================================================================================================================================##
 
 ## TÍTULO de la PESTAÑA del NAVEGADOR y añadir ICONO: (TÍTULO, URL ICONO (Subido a GitHub))
-URL_ICONO= 'https://raw.githubusercontent.com/Miguelgargor/APP_CENTRALIDAD/main/Imagen1.png?token=GHSAT0AAAAAACFRVEI72HGG3M535XDOKMHIZGFIVJQ'
+URL_ICONO= 'https://raw.githubusercontent.com/Miguelgargor/IMAGENES_APPs/main/Icono_app_centralidad.png'
 st.set_page_config(page_title="ANÁLISIS CENTRALIDAD", page_icon=URL_ICONO, layout="centered", initial_sidebar_state="auto")
 ##===========================================================================================================================================##
 ##===========================================================================================================================================##
@@ -428,7 +428,7 @@ st.markdown("""<style>/* Cambiar el color del encabezado a azul */.element-conta
 
 def main():
     st.title('ANÁLISIS DE CENTRALIDAD Y DISTANCIA') # TÍTULO.
-    st.image('https://raw.githubusercontent.com/Miguelgargor/APP_CENTRALIDAD/main/imagen_mapa.png?token=GHSAT0AAAAAACFRVEI64X5OCHJVIJFI6NSEZGFIVUA', use_column_width=True) # IMAGEN.
+    st.image('https://raw.githubusercontent.com/Miguelgargor/IMAGENES_APPs/main/imagen_mapa_app_centralidad.png', use_column_width=True) # IMAGEN.
 
 ## DESCRIPCIÓN APP:
     st.write('Con esta aplicación, podrás seleccionar cualquier ciudad, pueblo o distrito en el Mundo y, al elegir los parámetros deseados, obtendrás:',
