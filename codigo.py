@@ -12,6 +12,7 @@ import streamlit as st             # Creación de la APP WEB.
 import folium                      # Otras librerías necesarias en la APP WEB.
 import matplotlib
 import mapclassify
+import shutil                      # Para mover la carpeta 'cache'.
 ##=========================================================================================================================================##
 
 ## TÍTULO de la PESTAÑA del NAVEGADOR y añadir ICONO: (TÍTULO, URL ICONO (Subido a GitHub))
@@ -96,14 +97,20 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 ##------------------------------------------------------------------------------------------------------------------##
 ## 2º) Comprobar si la carpeta no existe antes de crearla:
     Nombre_Lugar= Lugar.split(',')[0].strip().replace(' ', '_') + '_' + Tipo_Calles # Nombre del Lugar extraído del parámetro 'Lugar'.
+    escritorio = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')   # RUTA ESCRITORIO.
+
     if Guardar_Archivos==True:
-      if not os.path.exists('./'): # Si no existe ya la carpeta...GENERAL.
-          os.makedirs('./ANALISIS CENTRALIDAD') # Creala con el Nombre del Lugar a analizar.
-      if not os.path.exists('./'): # Si no existe ya la carpeta...ESPECÍFICA.
-          os.makedirs('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}'.format(Nombre_Lugar)) # Creala con el Nombre del Lugar a analizar.
+        RUTA_GENERAL = os.path.join(escritorio, 'ANALISIS CENTRALIDAD')                               # RUTA CARPETA GENERAL.
+        if not os.path.exists(RUTA_GENERAL):   # Si no existe ya la carpeta...GENERAL.
+            os.makedirs(RUTA_GENERAL)          # Creala con el Nombre del Lugar a analizar.
+        
+        RUTA_ESPECIFICA = os.path.join(RUTA_GENERAL, 'ANALISIS_CENTRALIDAD_{}'.format(Nombre_Lugar))  # RUTA CARPETA ESPECÍFICA.
+        if not os.path.exists(RUTA_ESPECIFICA):   # Si no existe ya la carpeta...ESPECÍFICA.
+            os.makedirs(RUTA_ESPECIFICA)          # Creala con el Nombre del Lugar a analizar.
 ##------------------------------------------------------------------------------------------------------------------##
 ## 3º) Guardar Grafo:
-      ox.save_graphml(G, './ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}.graphml'.format(Nombre_Lugar, Nombre_Lugar))
+        RUTA_GRAFO = os.path.join(RUTA_ESPECIFICA, 'Grafo_{}.graphml'.format(Nombre_Lugar))
+        ox.save_graphml(G, RUTA_GRAFO)
 ##=========================================================================================================================================##
 ##=========================================================================================================================================##
 
@@ -183,7 +190,8 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 
 ## GUARDAR IMAGEN:
     if Guardar_Archivos==True:
-            plt.savefig('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}_Nodo_Mayor_Centralidad.png'.format(Nombre_Lugar, Nombre_Lugar))
+        RUTA_IMAGEN_NODO_ROJO = os.path.join(RUTA_ESPECIFICA, 'Grafo_{}_Nodo_Mayor_Centralidad.png'.format(Nombre_Lugar))
+        plt.savefig(RUTA_IMAGEN_NODO_ROJO)
 ##------------------------------------------------------------------------------------------------------------------##
 ## 12º) Crear MAPA INTERACTIVO con el NODO CENTRAL RESALTADO EN ROJO:
     # a) Convertir el Grafo a un GeoDataFrame:
@@ -204,11 +212,13 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 
     # f) Verificar si la carpeta 'MAPAS_INTERACTIVOS' ya existe dentro de 'ANALISIS_CENTRALIDAD':
     if Guardar_Archivos==True:
-      if not os.path.exists('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS'.format(Nombre_Lugar)):
-          os.makedirs('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS'.format(Nombre_Lugar))  # Si no existe-> crearla.
+        RUTA_MAPAS_INTERACTIVOS = os.path.join(RUTA_ESPECIFICA,'MAPAS_INTERACTIVOS')
+        if not os.path.exists(RUTA_MAPAS_INTERACTIVOS):
+            os.makedirs(RUTA_MAPAS_INTERACTIVOS)  # Si no existe-> crearla.
 
     # g) Guardar el Mapa Interactivo como archivo HTML (Google):
-          mapa_nodos.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Nodo_Mayor_Centralidad.html'.format(Nombre_Lugar))
+        RUTA_MAPA_INTERACTIVO_NODO_ROJO = os.path.join(RUTA_MAPAS_INTERACTIVOS,'Nodo_Mayor_Centralidad.html')
+        mapa_nodos.save(RUTA_MAPA_INTERACTIVO_NODO_ROJO)
 ##=========================================================================================================================================##
 ##=========================================================================================================================================##
 
@@ -246,7 +256,8 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 
 ## GUARDAR IMAGEN:
     if Guardar_Archivos==True:
-            plt.savefig('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}_Nodo_Mayor_Centralidad_ZOOM.png'.format(Nombre_Lugar, Nombre_Lugar))
+        RUTA_IMAGEN_ZOOM= os.path.join(RUTA_ESPECIFICA, 'Grafo_{}_Nodo_Mayor_Centralidad_ZOOM.png'.format(Nombre_Lugar))
+        plt.savefig(RUTA_IMAGEN_ZOOM)
 ##=========================================================================================================================================##
 ##=========================================================================================================================================##
 
@@ -266,7 +277,8 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 
 ## GUARDAR IMAGEN:
     if Guardar_Archivos==True:
-            plt.savefig('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}_Nodos_según_Centralidad_MEDIA.png'.format(Nombre_Lugar, Nombre_Lugar))
+        RUTA_IMAGEN_Nodos_segun_Centralidad_MEDIA= os.path.join(RUTA_ESPECIFICA, 'Grafo_{}_Nodos_según_Centralidad_MEDIA.png'.format(Nombre_Lugar))
+        plt.savefig(RUTA_IMAGEN_Nodos_segun_Centralidad_MEDIA)
 ##------------------------------------------------------------------------------------------------------------------##
 ## 18º) Crear MAPA INTERACTIVO con los NODOS según su Grado de CENTRALIDAD MEDIA:     (Mapa_Color,     Leyenda,     Estilo_Bordes_Nodos,                       Estilo_Mapa,
     mapa_nodos_segun_centralidad = geomapa_nodos.explore(column='Media_Centralidad', cmap='coolwarm', legend=True, style_kwds={'color':'black','weight':0.3}, tiles='CartoDB positron',
@@ -274,7 +286,8 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     
     # Guardar el Mapa Interactivo como archivo HTML (Google):
     if Guardar_Archivos==True:
-        mapa_nodos_segun_centralidad.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Nodos_según_Centralidad_MEDIA.html'.format(Nombre_Lugar))
+        RUTA_MAPA_INTERACTIVO_Nodos_segun_Centralidad_MEDIA = os.path.join(RUTA_MAPAS_INTERACTIVOS,'Nodos_según_Centralidad_MEDIA.html')
+        mapa_nodos_segun_centralidad.save(RUTA_MAPA_INTERACTIVO_Nodos_segun_Centralidad_MEDIA)
 ##=========================================================================================================================================##
 ##=========================================================================================================================================##
 
@@ -375,7 +388,8 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 ## GUARDAR IMAGEN:
     Tiempos= "_".join(map(str, Tiempos_Viaje))                                                # String con los Tiempos de Viaje: a_b_c...
     if Guardar_Archivos==True:
-            plt.savefig('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/Grafo_{}_Llegada_en_Tiempos_{}_minutos.png'.format(Nombre_Lugar, Nombre_Lugar, Tiempos))
+        RUTA_IMAGEN_TIEMPOS= os.path.join(RUTA_ESPECIFICA, 'Grafo_{}_Llegada_en_Tiempos_{}_minutos.png'.format(Nombre_Lugar, Tiempos))
+        plt.savefig(RUTA_IMAGEN_TIEMPOS)
 ##------------------------------------------------------------------------------------------------------------------##
 ## 26º) MAPA INTERACTIVO ISOCRONAS (Llegada en un determinado TIEMPO):
     # a) Obtener el color del nodo según la Isocrona correspondiente:
@@ -409,8 +423,19 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 
     # f) Guardar el Mapa Interactivo como archivo HTML (Google):
     if Guardar_Archivos==True:
-        Mapa_ISOCRONAS.save('./ANALISIS CENTRALIDAD/ANALISIS_CENTRALIDAD_{}/MAPAS_INTERACTIVOS/MAPA_INTERACTIVO_Llegada_en_Tiempos_{}_minutos.html'.format(Nombre_Lugar, Tiempos))
+        RUTA_MAPA_INTERACTIVO_TIEMPOS = os.path.join(RUTA_MAPAS_INTERACTIVOS,'MAPA_INTERACTIVO_Llegada_en_Tiempos_{}_minutos.html'.format(Tiempos))
+        Mapa_ISOCRONAS.save(RUTA_MAPA_INTERACTIVO_TIEMPOS)
 ##===========================================================================================================================================##
+##===========================================================================================================================================##
+
+### MOVER LA CARPETA DE 'cache' DENTRO DE LA OTRA CARPETA ESPECÍFICA:
+    # Ruta de las carpeta 'cache' en el escritorio:
+    carpeta_cache = os.path.join(escritorio, 'cache')
+    # Comprobar si existe la carpeta 'cache' en el escritorio:
+    if os.path.exists(carpeta_cache):
+        # Mover la carpeta 'cache' dentro de 'ANALISIS CENTRALIDAD_ESPECÍFICA':
+        ruta_destino = os.path.join(RUTA_ESPECIFICA, 'cache')
+        shutil.move(carpeta_cache, ruta_destino)
 ##===========================================================================================================================================##
 
 #### ESTILO DE TEXTOS Y BOTONES ####
