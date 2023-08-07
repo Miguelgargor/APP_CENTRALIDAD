@@ -13,7 +13,9 @@ import folium                      # Otras librerías necesarias en la APP WEB.
 import matplotlib
 import mapclassify
 import shutil                      # Para mover la carpeta 'cache'.
-from pathlib import Path
+from pathlib import Path           # Manejo de Rutas.
+import tempfile                    # Directorio Temporal en el Servidor (Navegador).
+import base64                      # Generar el LINK DE DESCARGA.
 ##=========================================================================================================================================##
 
 ## TÍTULO de la PESTAÑA del NAVEGADOR y añadir ICONO: (TÍTULO, URL ICONO (Subido a GitHub))
@@ -25,6 +27,11 @@ st.set_page_config(page_title="ANÁLISIS CENTRALIDAD", page_icon=URL_ICONO, layo
 #### FUNCIÓN PARA DIBUJAR EL GRAFO CON EL NODO DE MAYOR CENTRALIDAD ####
 def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo_Espera=180, Tipo_Calles='drive',
                          Tamaño_nodo=40, Tamaño_figura=(16,16), Guardar_Archivos=True):
+
+# Configurar la carpeta de 'CACHE' de osmnx para que sea la carpeta temporal generada:
+    temp_dir = Path(tempfile.mkdtemp()) # RUTA TEMPORAL EN EL NAVEGADOR.
+    ox.config(cache_folder=temp_dir)
+
 ### B) CREACIÓN Y GUARDADO DEL GRAFO:
 ## 1º) Creación del Grafo:
     # 0) Si se pasa del tiempo saltará una Excepción:
@@ -98,17 +105,16 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
 ##------------------------------------------------------------------------------------------------------------------##
 ## 2º) Comprobar si la carpeta no existe antes de crearla:
     Nombre_Lugar= Lugar.split(',')[0].strip().replace(' ', '_') + '_' + Tipo_Calles # Nombre del Lugar extraído del parámetro 'Lugar'.
-    escritorio = Path.home() / "Desktop"  # RUTA ESCRITORIO.
 
     if Guardar_Archivos==True:
-        RUTA_GENERAL = escritorio / 'ANALISIS CENTRALIDAD'                               # RUTA CARPETA GENERAL.
+        RUTA_GENERAL = temp_dir / 'ANALISIS CENTRALIDAD'  # RUTA CARPETA GENERAL.
         if not os.path.exists(RUTA_GENERAL):   # Si no existe ya la carpeta...GENERAL.
             os.makedirs(RUTA_GENERAL)          # Creala con el Nombre del Lugar a analizar.
         
         RUTA_ESPECIFICA = RUTA_GENERAL / 'ANALISIS_CENTRALIDAD_{}'.format(Nombre_Lugar)  # RUTA CARPETA ESPECÍFICA.
         if not os.path.exists(RUTA_ESPECIFICA):   # Si no existe ya la carpeta...ESPECÍFICA.
             os.makedirs(RUTA_ESPECIFICA)          # Creala con el Nombre del Lugar a analizar.
-##------------------------------------------------------------------------------------------------------------------##
+##-----------------------------------------------------------------------------------------------------------------##
 ## 3º) Guardar Grafo:
         RUTA_GRAFO = RUTA_ESPECIFICA / 'Grafo_{}.graphml'.format(Nombre_Lugar)
         ox.save_graphml(G, RUTA_GRAFO)
@@ -228,7 +234,7 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     vecinos= list(G.neighbors(Nodo_Clave))          # Vecinos del Nodo_Clave.
     Subgrafo_Zoom= G.subgraph(vecinos+[Nodo_Clave]) # Subgrafo (Vecinos + Nodo_Clave).
 ##------------------------------------------------------------------------------------------------------------------##
-## 14º) DIBUJAR: Subgrafo con el Nodo_Clave en color ROJO:
+## 14º) DIBUJAR: Subgrafo con el Nodo_Clave en -color ROJO:
     fig, ax= ox.plot_graph(Subgrafo_Zoom,                                 # Subgrafo.
                            figsize=(Tamaño_figura[0]-6, Tamaño_figura[1]-6), # Tamaño figura.
                            node_color=['r' if node == Nodo_Clave else 'skyblue' for node in Subgrafo_Zoom.nodes], # Color nodos.
@@ -425,17 +431,30 @@ def Dibujar_Nodo_Central(Lugar, Tiempos_Viaje, Velocidad, Distancia=3500, Tiempo
     if Guardar_Archivos==True:
         RUTA_MAPA_INTERACTIVO_TIEMPOS = RUTA_MAPAS_INTERACTIVOS / 'MAPA_INTERACTIVO_Llegada_en_Tiempos_{}_minutos.html'.format(Tiempos)
         Mapa_ISOCRONAS.save(RUTA_MAPA_INTERACTIVO_TIEMPOS)
+
+    return RUTA_GENERAL
 ##===========================================================================================================================================##
 ##===========================================================================================================================================##
 
-### MOVER LA CARPETA DE 'cache' DENTRO DE LA OTRA CARPETA ESPECÍFICA:
-    # Ruta de las carpeta 'cache' en el escritorio:
-    carpeta_cache = escritorio / 'cache'
-    # Comprobar si existe la carpeta 'cache' en el escritorio:
-    if os.path.exists(carpeta_cache):
-        # Mover la carpeta 'cache' dentro de 'ANALISIS CENTRALIDAD_ESPECÍFICA':
-        ruta_destino = RUTA_ESPECIFICA / 'cache'
-        shutil.move(carpeta_cache, ruta_destino)
+#### FUNCIÓN PARA GENERAR EL LINK DE DESCARGA DE LOS ARCHIVOS ####
+def generar_link_descarga(ruta_carpeta, nombre_archivo_zip):
+    # Comprimir la carpeta con los archivos en un archivo ZIP:
+    shutil.make_archive(nombre_archivo_zip, 'zip', ruta_carpeta)
+
+    # Leer el contenido del archivo ZIP como bytes:
+    with open(nombre_archivo_zip + '.zip', 'rb') as f:
+        archivo_zip_bytes = f.read()
+
+    # Codificar el contenido del archivo ZIP como base64:
+    archivo_zip_base64 = base64.b64encode(archivo_zip_bytes).decode('utf-8')
+
+    # Generar el link de descarga:
+    href = f'<a href="data:application/zip;base64,{archivo_zip_base64}" download="{nombre_archivo_zip}.zip">DESCARGAR MAPAS</a>'   # TEXTO DEL ENLACE.
+
+    # Eliminar el archivo ZIP temporal después de crear el link de descarga:
+    os.remove(nombre_archivo_zip + '.zip')
+    return href
+##===========================================================================================================================================##
 ##===========================================================================================================================================##
 
 #### ESTILO DE TEXTOS Y BOTONES ####
@@ -467,9 +486,9 @@ def main():
 
 ## Entrada de parámetros:
     # a) Lugar:
-    with st.expander('**1- Lugar a estudiar**'):
+    with st.expander('**1- Lugar**'):
         # Explicación Parámetro:
-        st.write('Ingresar la ciudad, pueblo, distrito o zona geográfica que se desee estudiar.')
+        st.write('Ingresar la ciudad, pueblo, distrito o zona geográfica que se desee.')
         # Ingresar el Parámetro:
         lugar = st.text_input('Ejemplo:', value='Ávila, Castilla y León, España')
 
@@ -489,9 +508,9 @@ def main():
         velocidad = st.number_input('Ejemplo:',min_value=1.0, max_value=100.0, value=6.0, step=0.1)
 
     # d) Distancia del cuadro del Grafo (compacto):
-    with st.expander('**4- Distancia máxima del lugar desde su punto medio** (en metros)'):
+    with st.expander('**4- Diámetro máximo del mapa** (en metros)'):
         # Explicación Parámetro:
-        st.write('Indica la distancia máxima que se tendrá en cuenta para crear el grafo desde el punto medio de la zona indicada.')
+        st.write('Indica la distancia máxima que se tendrá en cuenta para crear el mapa desde el punto medio del lugar indicado.')
         # Ingresar el Parámetro:
         distancia = st.slider('Ejemplo:', min_value=1000, max_value=8000, value=3500, step=100)
 
@@ -510,25 +529,18 @@ def main():
         tipo_calles = st.selectbox('Ejemplo (Recomendado):', ['drive', 'walk', 'bike', 'all', 'all_private'], index=0)
     
     # g) Tamaño del Nodo principal: 
-    with st.expander('**7- Tamaño de los nodos en el grafo**'):
+    with st.expander('**7- Tamaño del punto clave en el mapa**'):
         # Explicación Parámetro:
         st.write('Tamaño de los puntos dibujados sobre el mapa.')
         # Ingresar el Parámetro:
         tamaño_nodo = st.slider('Ejemplo:', min_value=10, max_value=100, value=40, step=1)
   
     # h) Tamaño de la figura:
-    with st.expander('**8- Tamaño de la figura**'):
+    with st.expander('**8- Tamaño de los mapas**'):
         # Explicación Parámetro:
-        st.write('Dimensiones de los mapas generados.')
+        st.write('Dimensiones de los mapas generados en pulgadas.')
         # Ingresar el Parámetro:
         tamaño_figura = st.selectbox('Ejemplo:', [(i, i) for i in range(1, 17)], index=9)
-  
-    # i) Guardar los Ploteos y el Grafo:
-    with st.expander('**9- ¿Guardar los mapas y el grafo?**'):
-        # Explicación Parámetro:
-        st.write('Opción para guardar los mapas y el grafo creados. Por defecto se guardarán.')
-        # Ingresar el Parámetro:
-        Guardar_Archivos = True if st.radio('', ['SI', 'NO'], index=0) == 'SI' else False
 
 ### Crear el Botón para ejecutar el Código:
     if st.button('**GENERAR RESULTADOS**'):
@@ -537,12 +549,17 @@ def main():
         mensaje.write('<p style="font-size: 20px; color: red; font-weight: bold;">Obtener los resultados puede tardar unos minutos...</p>',
                         unsafe_allow_html=True)
 #### CARGADO DE LA FUNCIÓN EN SÍ:
-        Dibujar_Nodo_Central(lugar, tiempos_viaje, velocidad, distancia, tiempo_espera, tipo_calles,
-                             tamaño_nodo, tamaño_figura, Guardar_Archivos)
+        carpeta_generada = Dibujar_Nodo_Central(lugar, tiempos_viaje, velocidad, distancia, tiempo_espera, tipo_calles,
+                             tamaño_nodo, tamaño_figura, Guardar_Archivos=True)
+    
+        # Generar el link de descarga:
+        nombre_archivo_zip= 'RESULTADOS_OBTENIDOS' # NOMBRE DEL ARCHIVO .ZIP.
+        link_descarga= generar_link_descarga(carpeta_generada, nombre_archivo_zip)
         
-    ## Mensaje tras haber obtenido los resultados: (Indicando TAMAÑO, COLOR (limegreen), NEGRITA...):
+    ## Mensaje tras haber obtenido los resultados:
         mensaje.write('<p style="font-size: 18px; color: limegreen; font-weight: bold;">¡Resultados obtenidos!</p>'
-                    '<p style="font-size: 15px; color: limegreen;">(En caso de haber activado la opción de guardar los resultados, puedes ver los <strong>MAPAS INTERACTIVOS</strong> en la carpeta creada en tu escritorio)</p>',
-                    unsafe_allow_html=True)
+                    '<p style="font-size: 15px; color: limegreen;">Puedes descargar los <strong>MAPAS INTERACTIVOS</strong> y el resto de visualizaciones en el siguiente enlace:</p>'
+                    f'{link_descarga}', unsafe_allow_html=True)
+
 if __name__ == "__main__":
     main()
